@@ -1,0 +1,14 @@
+{
+  "name": "proyecto_demo",
+  "version": "1.0.0",
+  "description": "proyecto inicial demo",
+  "main": "app.js",
+  "scripts": {
+    "test": "testing"
+  },
+  "author": "Esteban Ibañez",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
