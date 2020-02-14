@@ -4,11 +4,26 @@
   "description": "proyecto inicial demo",
   "main": "app.js",
   "scripts": {
-    "test": "testing"
+    "test": "testing",
+    "dev": "nodemon app.js",
+    "stop-win": "Taskkill /IM node.exe /F"
   },
   "author": "Esteban Ibañez",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
-  }
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/estebanibannez/proyecto_demo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/estebanibannez/proyecto_demo/issues"
+  },
+  "homepage": "https://github.com/estebanibannez/proyecto_demo#readme"
 }
