@@ -1,5 +1,30 @@
 const request = require('request-promise');
 
+
+const callCreateHeader = (userSession, ip, module, trxID) => {
+  const header = {
+    consumerData: {
+      isapre: userSession.isapre || "B",
+      ip,
+      agency: '2499',
+      channel: '80',
+      module,
+      functionality: 'op',
+      service: 'apis',
+      serviceType: 'apis',
+      userId: userSession.rut || "13187476"
+    },
+    transactionData: {
+      idTransaction: trxID,
+      idTransaction_Rel: trxID,
+      userType: 'Afiliado',
+      date: new Date().toISOString()
+
+    }
+  }
+  return header;
+}
+
 const callDataFormHelper = async(url, method, formData, moreOptions) => {
     const timeout = (moreOptions && moreOptions.timeout)
         ? moreOptions.timeout
@@ -34,8 +59,8 @@ const callRESTHelper = async (url, method, body, moreOptions) => {
       uri: url,
       method: method,
       timeout,
-      body: body,
-      json: true,
+      // body: body,
+      json: body || true,
       resolveWithFullResponse: true,
       simple: false
     }
@@ -63,5 +88,6 @@ const callRESTHelper = async (url, method, body, moreOptions) => {
 
 module.exports = {
     callDataFormHelper,
-    callRESTHelper
+    callRESTHelper,
+    callCreateHeader
 };

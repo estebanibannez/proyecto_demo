@@ -25,11 +25,9 @@ app.use(bodyParser.json())
 // app.use(express.urlencoded({ limit: '500mb', extended: false }));
 
 //seteo las rutas
-app.use(cfg.API_VERSION, require('./src/routes/usuario-api'));
+app.use(cfg.API_VERSION, require('./src/routes/usuarios-api'));
 
 // ========================================== //
-
-
 
 app.listen(2000 ,() => {
 
