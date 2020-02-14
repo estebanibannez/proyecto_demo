@@ -7,3 +7,7 @@ Proyecto de prueba GIT.
 
 
 >> create by Ibanez
+
+## clonar proyecto base
+
+$ git clone https://github.com/estebanibannez/proyecto_demo.git
