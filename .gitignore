@@ -49,6 +49,6 @@ Thumbs.db
 node_modules/
 
 .scannerwork
-
+debug.log
 logs/*
 files/
