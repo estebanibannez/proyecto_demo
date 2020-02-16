@@ -7,7 +7,7 @@ module.exports = {
     TITLE: "DEMO",
     API_VERSION: "/api/v1",
     puerto: {
-        webPort: process.env.MD_CH_PORT || process.env.PORT || 8080
+        webPort: process.env.PORT || 8080
     },
 
 }
