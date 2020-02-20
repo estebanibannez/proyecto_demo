@@ -1,7 +1,5 @@
 'use strict'
 const helper = require('../helpers/usuarios-helper');
-// requires
-
 const call = require('../utils/caller-service');
 
 const getDataUsuarios = async(req) => {
