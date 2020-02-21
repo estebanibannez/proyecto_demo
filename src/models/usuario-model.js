@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-
 let usuarioSchema = new Schema({
     nombre: {
         type: String,
@@ -44,6 +43,18 @@ let usuarioSchema = new Schema({
         default: Date.now()
     }
 });
+
+//ocultando la contraseña en la respuesta
+
+usuarioSchema.methods.toJSON = function () {
+
+    let user = this;
+    let userObject = user.toObject();
+    delete userObject.password;
+
+    return userObject;
+}
+
 
 //exportando el schema de usuarios
 module.exports = mongoose.model('Usuarios', usuarioSchema);
