@@ -21,6 +21,18 @@ const StatusBodyOk = (code, body) => {
     return statusBody;
 };
 
+const StatusBodyOkToken = (code, body, token) => {
+    var statusBody = {
+        header: { 
+            code: code, 
+            status: 200,
+            token : token
+        },
+        body: body
+    };
+    return statusBody;
+};
+
 const StatusBodyError = (code, message) => {
     var statusBody = {
         header: { 
@@ -34,8 +46,10 @@ const StatusBodyError = (code, message) => {
 }
 
 
+
 module.exports = {
     buildArgsForRequest, 
     StatusBodyOk,
+    StatusBodyOkToken,
     StatusBodyError
 }
