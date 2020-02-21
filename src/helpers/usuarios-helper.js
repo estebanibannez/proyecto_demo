@@ -1,5 +1,5 @@
 const Usuario = require('../models/usuario-model');
-
+const bcrypt = require('bcrypt');
 //formateo el body del post
 const bodyCreateUsuario = (req) => {
 
@@ -14,11 +14,12 @@ const bodyCreateUsuario = (req) => {
 const bodySchemaUsuario = (req) => {
 
     console.log(req.body);
+    
     var usuario =  new Usuario({
         nombre: req.body.nombre,
         apellidos: req.body.apellidos,
         email: req.body.email,
-        password: req.body.password,
+        password: bcrypt.hashSync(req.body.password,10),
         role: req.body.role
     });
     return usuario;

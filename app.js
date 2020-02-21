@@ -4,14 +4,16 @@ const app = express();
 const cfg = require("./src/config/configuration");
 const mongoose = require('mongoose');
 const hbs = require('hbs');
+
 //seteo de variables app.set('port', cfg.puerto.webPort); settings
 const port = cfg.puerto.webPort;
 
 
 mongoose.set('useCreateIndex', true)
 // Le indicamos a Mongoose que haremos la conexión con Promesas mongoose.Promise
-// = global.Promise; =========== middlewares ================== // seteando la
-// cabecera de las respuestas.
+// = global.Promise; 
+//=========== middlewares ================== // 
+
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -22,8 +24,10 @@ app.use(function (req, res, next) {
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-app.use(cfg.API_VERSION, require('./src/routes/usuarios-api'));
-
+//===========configuración global de rutas ================//
+// app.use(cfg.API_VERSION, require('./src/routes/usuarios-api'));
+// app.use(cfg.API_VERSION, require('./src/routes/login-api'));
+app.use(cfg.API_VERSION, require('./src/config/rutas'));
 //==================pagina publica=====================//
 app.use('/', express.static(__dirname + '/public'));
 
