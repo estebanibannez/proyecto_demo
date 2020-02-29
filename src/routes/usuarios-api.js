@@ -2,7 +2,8 @@ const router = require('express').Router();
 const call = require('../utils/caller-service');
 const service = require('../services/usuarios-service');
 const uHttp = require('../utils/utils-http');
-const Usuario = require('../models/usuario-model');
+const helper = require('../helpers/usuarios-helper');
+const mongoose = require('mongoose');
 
 router.get('/getusers', async(req, res) => {
     try {
@@ -32,7 +33,7 @@ router.get('/getuser/:id', async(req, res) => {
 
 });
 
-router.post('/createUser', async(req, res) => {
+router.post('/createuser', async(req, res) => {
     try {
 
         var responseAPIuser = await service.createUsuario(req);
@@ -46,7 +47,7 @@ router.post('/createUser', async(req, res) => {
 
 });
 
-router.put('/updateUser/:id', async(req, res) => {
+router.put('/updateuser/:id', async(req, res) => {
     var id = req.params.id;
     var request = req.body;
     try {
@@ -61,27 +62,19 @@ router.put('/updateUser/:id', async(req, res) => {
 
 });
 
-
-
 // http usuario en mongo
 
-router.post('./createUserMongd', (req, res) => {
+router.post('/createusermongo', (req, res) => {
 
-    var usuario = new Usuario({
-        nombre: req.body.nombre,
-        apellidos: req.body.apellidos,
-        email: req.body.email,
-        password: req.body.password,
-        role: req.body.role
-    });
-
+    var usuario = helper.bodySchemaUsuario(req);
+    console.log("into /createusermongo", usuario);
     usuario.save((err, usuarioDb) => {
         if (err) {
             return res.status(400).json(uHttp.StatusBodyError("400", err));
         }
 
-        return res.status(200)
-            .json(uHttp.StatusBodyOk(200, usuarioDb));
+        return res
+            .json(uHttp.StatusBodyOk("OK", usuarioDb));
 
     });
 

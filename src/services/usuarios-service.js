@@ -1,13 +1,11 @@
 'use strict'
 const helper = require('../helpers/usuarios-helper');
-// requires
-
 const call = require('../utils/caller-service');
 
 const getDataUsuarios = async(req) => {
 
     var responseApi = await call.callRESTHelper('https://reqres.in/api/users', 'GET');
-
+    console.log("Consulta todos los usuarios -->",responseApi.body.data);
     return responseApi;
 };
 

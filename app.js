@@ -3,45 +3,66 @@ const bodyParser = require('body-parser')
 const app = express();
 const cfg = require("./src/config/configuration");
 const mongoose = require('mongoose');
-//seteo de variables
-// app.set('port', cfg.puerto.webPort);
+const hbs = require('hbs');
 
-//settings
+//seteo de variables app.set('port', cfg.puerto.webPort); settings
 const port = cfg.puerto.webPort;
-// const portMongo 
-// =========== middlewares ================== //
 
-//seteando la cabecera de las respuestas.
-app.use(function(req, res, next) {
+
+mongoose.set('useCreateIndex', true)
+// Le indicamos a Mongoose que haremos la conexión con Promesas mongoose.Promise
+// = global.Promise; 
+//=========== middlewares ================== // 
+
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     next();
 });
-// parse application/x-www-form-urlencoded
-// parse application/json
-app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/x-www-form-urlencoded parse application/json
+app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
-    // app.use(express.json({ limit: '500mb' }));
-    // app.use(express.urlencoded({ limit: '500mb', extended: false }));
 
-//seteo las rutas
-app.use(cfg.API_VERSION, require('./src/routes/usuarios-api'));
+//===========configuración global de rutas ================//
+// app.use(cfg.API_VERSION, require('./src/routes/usuarios-api'));
+// app.use(cfg.API_VERSION, require('./src/routes/login-api'));
+app.use(cfg.API_VERSION, require('./src/config/rutas'));
+//==================pagina publica=====================//
+app.use('/', express.static(__dirname + '/public'));
 
-// ========================================== //
+
+//============ ENGINE EXPRESS HBS==============//
+hbs.registerPartials(__dirname + '/views/partials');
+app.set('view engine', 'hbs');
 
 
-// ====conexión a base de datos mongo db==== //
-//mongoose.connect('mongodb://localhost:27017/proyecto-api-node', {useNewUrlParser: true, useUnifiedTopology: true});
-// mongoose.connect("mongodb://localhost:proyecto-api-node",(err, res) => {
+//============== Conexión a mongodb ===================//
+mongoose.connect('mongodb://localhost:27017/proapinode', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}, (err) => {
+    if (err) {
+        console.log("Ocurrió un error con la conexión a la bd -->", err);
 
-// if(err) throw  console.log("ocurrio un error",err);
-//     console.log(`conexión base de datos éxitosa en puerto ${portmongo}`);
-// });
+    }
+});
+
 
 app.listen(port, () => {
-
     console.log("app run en puerto: ", port);
+});
+
+
+app.get('/', (req, res )=> {
+
+
+    var obj = {
+        anio : new Date().getFullYear()
+    };  
+    
+    console.log("entra login");
+    res.render('home',obj);
 
 
 });
