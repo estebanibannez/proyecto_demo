@@ -3,11 +3,11 @@
 //===============================================//
 const express = require('express');
 const app = express();
-const cfg = require('./configuration');
 
 
-app.use(require('../routes/usuarios-api'));
-app.use(require('../routes/login-api'));
+
+app.use(require('./usuarios-api'));
+app.use(require('./login-api'));
 
 
-module.exports =  app;
+module.exports = app;

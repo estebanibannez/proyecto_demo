@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node app.js",
         "test": "testing",
-        "dev": "nodemon app.js",
+        "dev": "nodemon -L app.js",
         "stop-win": "Taskkill /IM node.exe /F"
     },
     "author": "Esteban Ibañez",
@@ -17,13 +17,15 @@
         "bootstrap": "^4.4.1",
         "express": "^4.17.1",
         "hbs": "^4.1.0",
-        "mongoose": "^5.9.1",
-        "nodemon": "^2.0.2",
+        "heroku": "^7.38.2",
+        "mongoose": "^5.9.2",
         "request": "^2.88.2",
         "request-promise": "^4.2.5",
         "underscore": "^1.9.2"
     },
-    "devDependencies": {},
+    "devDependencies": {
+        "nodemon": "^2.0.2"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/estebanibannez/proyecto_demo.git"

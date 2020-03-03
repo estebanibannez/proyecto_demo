@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
+
+let rolesValidos = {
+    values: ['ADMIN', 'USER'],
+    message: '{VALUE} no es un rol válido.'
+};
+
 let usuarioSchema = new Schema({
     nombre: {
         type: String,
@@ -24,7 +30,8 @@ let usuarioSchema = new Schema({
     },
     role: {
         type: String,
-        default: 'USER'
+        default: 'USER',
+        enum: rolesValidos
     },
     estado: {
         type: Boolean,
@@ -46,7 +53,7 @@ let usuarioSchema = new Schema({
 
 //ocultando la contraseña en la respuesta
 
-usuarioSchema.methods.toJSON = function () {
+usuarioSchema.methods.toJSON = function() {
 
     let user = this;
     let userObject = user.toObject();

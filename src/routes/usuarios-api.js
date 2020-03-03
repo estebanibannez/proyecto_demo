@@ -1,11 +1,15 @@
-const router = require('express').Router();
-const call = require('../utils/caller-service');
+// const router = require('express').Router();
 const service = require('../services/usuarios-service');
 const uHttp = require('../utils/utils-http');
 const helper = require('../helpers/usuarios-helper');
-const mongoose = require('mongoose');
 
-router.get('/getusers', async(req, res) => {
+const express = require('express');
+const app = express();
+
+const mongoose = require('mongoose');
+const _ = require('underscore');
+
+app.get('/getusers', async(req, res) => {
     try {
         var responseAPI = await service.getDataUsuarios();
         return res
@@ -17,7 +21,7 @@ router.get('/getusers', async(req, res) => {
 
 });
 
-router.get('/getuser/:id', async(req, res) => {
+app.get('/getuser/:id', async(req, res) => {
 
     let id = req.params.id;
     try {
@@ -33,21 +37,23 @@ router.get('/getuser/:id', async(req, res) => {
 
 });
 
-router.post('/createuser', async(req, res) => {
+app.post('/createuser', async(req, res) => {
     try {
-
-        var responseAPIuser = await service.createUsuario(req);
-
+        var
+            responseAPIuser = await service.createUsuario(req);
         return res
-            .status(201)
-            .json({ status: 200, response: 'OK', data: responseAPIuser.body });
+            .status(201).json({
+                status: 200,
+                response: 'OK',
+                data: responseAPIuser.body
+            });
     } catch (error) {
-        return res.json(uHttp.StatusBodyError("500", error.message));
+        return
+        res.json(uHttp.StatusBodyError("500", error.message));
     }
-
 });
 
-router.put('/updateuser/:id', async(req, res) => {
+app.put('/updateuser/:id', async(req, res) => {
     var id = req.params.id;
     var request = req.body;
     try {
@@ -64,21 +70,51 @@ router.put('/updateuser/:id', async(req, res) => {
 
 // http usuario en mongo
 
-router.post('/createusermongo', (req, res) => {
+app.post('/createuser', (req, res) => {
 
     var usuario = helper.bodySchemaUsuario(req);
-    console.log("into /createusermongo", usuario);
+
+    //grabando usuario en la base de datos
     usuario.save((err, usuarioDb) => {
         if (err) {
-            return res.status(400).json(uHttp.StatusBodyError("400", err));
+            return res
+                .status(400)
+                .json(uHttp.StatusBodyError("400", err));
         }
 
-        return res
-            .json(uHttp.StatusBodyOk("OK", usuarioDb));
+        return res.json(uHttp.StatusBodyOk("OK", usuarioDb));
 
     });
 
 });
 
+app.put('/updateuser/:id', async(req, res) => {
+    var id = req.params.id;
+    var request = _.pick(req.body, ['nombre', 'apellidos', 'role']);
 
-module.exports = router;
+    try {
+
+        var Usuario = require('../models/usuario-model');
+
+        Usuario.findByIdAndUpdate(id, request, {
+            new: true,
+            runValidators: true
+        }, (err, usuarioDb) => {
+
+            if (err) {
+                return res.json(uHttp.StatusBodyError("400", "Ocurrió un error."));
+            }
+            console.log(Usuario);
+            return res
+                // .status(200)
+                .json({ status: 200, response: 'UPDATE', data: usuarioDb });
+
+        });
+
+    } catch (error) {
+        return res.json(uHttp.StatusBodyError("500", error.message));
+    }
+
+});
+
+module.exports = app;
