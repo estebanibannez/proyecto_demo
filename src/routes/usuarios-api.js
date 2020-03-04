@@ -37,21 +37,21 @@ app.get('/getuser/:id', async(req, res) => {
 
 });
 
-app.post('/createuser', async(req, res) => {
-    try {
-        var
-            responseAPIuser = await service.createUsuario(req);
-        return res
-            .status(201).json({
-                status: 200,
-                response: 'OK',
-                data: responseAPIuser.body
-            });
-    } catch (error) {
-        return
-        res.json(uHttp.StatusBodyError("500", error.message));
-    }
-});
+// app.post('/createuser', async(req, res) => {
+//     try {
+//         var
+//             responseAPIuser = await service.createUsuario(req);
+//         return res
+//             .status(201).json({
+//                 status: 200,
+//                 response: 'OK',
+//                 data: responseAPIuser.body
+//             });
+//     } catch (error) {
+//         return
+//         res.json(uHttp.StatusBodyError("500", error.message));
+//     }
+// });
 
 app.put('/updateuser/:id', async(req, res) => {
     var id = req.params.id;
@@ -73,7 +73,7 @@ app.put('/updateuser/:id', async(req, res) => {
 app.post('/createuser', (req, res) => {
 
     var usuario = helper.bodySchemaUsuario(req);
-
+    console.log("entro a usuario create", usuario);
     //grabando usuario en la base de datos
     usuario.save((err, usuarioDb) => {
         if (err) {

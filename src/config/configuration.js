@@ -18,6 +18,18 @@ module.exports = {
         desarrolloDB: 'mongodb://localhost:27017/proapinode',
         productionDB: process.env.URI_PRODUCTIONDB
             // productionDB: 'mongodb+srv://jibanez:teba123@pro-api-node-bzxyj.mongodb.net/pro-api-node?retryWrites=true&w=majority'
-    }
+    },
+    // ============================
+    //  SEED de autenticación
+    // ============================
+    SECRETTOKEN: process.env.SEED || 'CLEOPATRA',
+    // ============================
+    //  Vencimiento del Token
+    // ============================
+    // 60 segundos
+    // 60 minutos
+    // 24 horas
+    // 30 días
+    CADUCIDADTOKEN: process.env.CADUCIDAD_TOKEN = 60 * 60 * 24 * 30
 
 }

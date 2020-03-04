@@ -3,26 +3,26 @@
 const express = require('express');
 const app = express();
 const service = require('../services/login-service');
-
-
-const utoken = require('../utils/utils-tokens');
 const uHttp = require('../utils/utils-http');
 
-const _ = require('underscore');
+
 
 app.post('/login', async(req, res) => {
 
-    const usuario = await service.validaUsuario(req);
+    var usuario = await service.validaUsuario(req);
+    console.log("validación usuario --> ", usuario);
 
     try {
-        if (usuario) {
+        if (!usuario.flag) {
             console.log("error");
             return res.json(uHttp.StatusBodyError("400", usuario));
         }
-        return res.json(utoken.tokenMask(usuario));
+        return res.json(uHttp.StatusBodyOkToken("200", usuario.usuario, usuario.token));
 
     } catch (error) {
         console.log(error);
+        return res.json(uHttp.StatusBodyError("500", `Ocurrió un error ${error}`));
+
     }
 
     res.json({ ok: true });

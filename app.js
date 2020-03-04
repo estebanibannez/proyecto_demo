@@ -15,8 +15,8 @@ app.use(cfg.API_VERSION, require('./src/routes/rutas'));
 
 mongoose.set('useCreateIndex', true)
 
-//================== middlewares ==========================//
-// ==========cabecera de las respuestas.==================//   
+// ================== middlewares ==========================// ==========cabecera
+// de las respuestas.==================//
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -36,24 +36,26 @@ app.use(express.static('/images'));
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
 
-var conexióndb;
+var conexiondb;
 
 //============== Conexión a mongodb ===================//
 if (cfg.ENVIROMENT.env === 'DEV') {
-    conexióndb = cfg.CONEXIONBD.desarrolloDB
+    conexiondb = cfg.CONEXIONBD.desarrolloDB
 } else {
-    conexióndb = cfg.CONEXIONBD.productionDB
+    conexiondb = cfg.CONEXIONBD.productionDB
 }
 
-mongoose.connect(conexióndb, {
+mongoose.connect(conexiondb, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }, (err) => {
     if (err) {
         console.log("Ocurrió un error con la conexión a la bd -->", err);
     }
+
+}).then((res) => { /** ready to use. The `mongoose.connect()` promise resolves to mongoose instance. */
     console.log("===Base de datos moongose en línea:===");
-    console.log(conexióndb);
+    console.log("Conexión mongoose ", conexiondb);
 });
 console.log("======================================");
 console.log("|Entorno de desarrollo actual : ", cfg.ENVIROMENT.env + "|");
@@ -62,7 +64,6 @@ app.listen(port, () => {
     console.log("|API corriendo en el puerto! : ", port + "|");
     console.log("======================================");
 });
-
 
 //===================GET INICIAL=================//
 app.get('/', (req, res) => {
