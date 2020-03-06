@@ -45,10 +45,15 @@ async function verify(token) {
     // console.log(payload.email);
     // console.log(payload.picture);
 
-    return { nombre: payload.name, email: payload.email, imagen: payload.picture, google: true };
+    return {
+        nombre: payload.name,
+        email: payload.email,
+        imagen: payload.picture,
+        google: true
+    };
 
 }
-// verify().catch(console.error); 
+// verify().catch(console.error);
 
 
 //==================== luego de logearse con libreria google sign in verifico el token de Google =========//
@@ -61,9 +66,10 @@ app.post('/google', async(req, res) => {
     // console.log("body completo desde js signin :", req.body);
     let usuarioGoogle = await verify(googletoken).catch(error => {
 
-        console.log(`Ocurrió un error en autenticación google ${error}`);
-        return res.json(uHttp.StatusBodyError("403", "Ocurrió un error en la autenticación google"));
+        console.log(`Ocurrió un error en validación de token google : ${error}`);
+        return res.status(403).json(uHttp.StatusBodyError("403", "Ocurrió un error en la autenticación google"));
     });
+
     console.log('/authgoogle', usuarioGoogle);
 
     //verificar que usuario no esté registrado con el correo en la bd
@@ -74,46 +80,52 @@ app.post('/google', async(req, res) => {
         email: usuarioGoogle.email
     }, (err, usuariodb) => {
         console.log("respuesta findOne", usuariodb)
-        if (err) {
-            return res.json(uHttp.StatusBodyError("500", `Ocurrió un error ${err}`))
-        }
-        //si existe usuario registrado en bd ,y tiene google en falso, debe iniciar con su cuenta normal
-        if (usuariodb) {
-            if (usuariodb.google == false) {
-                return res.json(uHttp.StatusBodyError("400", "Usuario ya está registrado, debe iniciar con su sesión normal"))
-            } else {
-                // en caso contrario el usuario está creado , debo generarle un nuevo token 
-                const token = creaToken(usuariodb);
-                return res.json(uHttp.StatusBodyOkToken("200", usuariodb, token))
+        if (usuariodb != null) {
+
+
+            if (err) {
+                return res.json(uHttp.StatusBodyError("500", `Ocurrió un error: ${err}`));
             }
-        } else {
-            //si usuario no existe , se crea en la base de datos
-
-            let usuario = new Usuario();
-
-            usuario.nombre = nombres;
-            usuario.apellidos = apellidos;
-            usuario.email = usuarioGoogle.email;
-            usuario.img = usuarioGoogle.imagen;
-            usuario.google = true;
-            usuario.password = ':)';
-
-
-
-            usuario.save((err, usuariodb) => {
-
-                if (error) {
-                    console.log("ocurrió un error de guardado de usuario nuevo --> ", error);
-                    return res.json(uHttp.StatusBodyError("500", `Ocurrió un error ${error}`))
-
+            //si existe usuario registrado en bd ,y tiene google en falso, debe iniciar con su cuenta normal
+            if (usuariodb) {
+                if (usuariodb.google == false) {
+                    return res.json(uHttp.StatusBodyError("400", "Usuario ya está registrado, debe iniciar con su sesión normal"));
+                } else {
+                    // en caso contrario el usuario está creado , debo generarle un nuevo token 
+                    const token = creaToken(usuariodb);
+                    return res.json(uHttp.StatusBodyOkToken("200", usuariodb, token));
                 }
-                //si no hay error entonces creo un token y lo regreso
-                console.log("usuario no existe en la bd , se crea --> ", usuario);
-                const token = creaToken(usuariodb);
-                return res.json(uHttp.StatusBodyOkToken("200", usuariodb, token));
+            } else {
+                //si usuario no existe , se crea en la base de datos
 
-            });
+                let usuario = new Usuario();
+
+                usuario.nombre = nombres;
+                usuario.apellidos = apellidos;
+                usuario.email = usuarioGoogle.email;
+                usuario.img = usuarioGoogle.imagen;
+                usuario.google = true;
+                usuario.password = ':)';
+
+
+
+                usuario.save((error, usuariodb) => {
+
+                    if (error) {
+                        console.log("ocurrió un error de guardado de usuario nuevo --> ", error);
+                        return res.json(uHttp.StatusBodyError("500", `Ocurrió un error ${error}`));
+
+                    }
+                    //si no hay error entonces creo un token y lo regreso
+                    console.log("usuario no existe en la bd , se crea --> ", usuario);
+                    const token = creaToken(usuariodb);
+                    return res.json(uHttp.StatusBodyOkToken("200", usuariodb, token));
+
+                });
+            }
+
         }
+
 
     })
 });
