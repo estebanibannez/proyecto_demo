@@ -70,7 +70,7 @@ app.post('/google', async(req, res) => {
         return res.status(403).json(uHttp.StatusBodyError("403", "Ocurrió un error en la autenticación google"));
     });
 
-    console.log('/authgoogle', usuarioGoogle);
+    console.log(' dentro de /authgoogle', usuarioGoogle);
 
     //verificar que usuario no esté registrado con el correo en la bd
     const Usuario = require("../models/usuario-model");
