@@ -30,6 +30,7 @@ module.exports = {
     // 60 minutos
     // 24 horas
     // 30 días
-    CADUCIDADTOKEN: process.env.CADUCIDAD_TOKEN = 60 * 60 * 24 * 30
+    CADUCIDADTOKEN: process.env.CADUCIDAD_TOKEN = 60 * 60 * 24 * 30,
+    CLIENT_ID: process.env.CLIENT_ID || '932207751579-veeb40suglb58s0grcrrlq5evoajdihn.apps.googleusercontent.com'
 
 }

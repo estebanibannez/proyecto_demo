@@ -2,12 +2,19 @@
 const service = require('../services/usuarios-service');
 const uHttp = require('../utils/utils-http');
 const helper = require('../helpers/usuarios-helper');
-
+const { verificaToken } = require('../middlewares/autenticacion');
 const express = require('express');
 const app = express();
 
 const mongoose = require('mongoose');
 const _ = require('underscore');
+
+
+app.get('/usuario', verificaToken, (req, res) => {
+    console.log("entra usuario");
+    res.json(uHttp.StatusBodyOkToken("200", req.usuario, req.token));
+
+});
 
 app.get('/getusers', async(req, res) => {
     try {

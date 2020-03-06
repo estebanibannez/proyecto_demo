@@ -12,8 +12,8 @@ const buildArgsForRequest = (requestBody) => {
 
 const StatusBodyOk = (code, body) => {
     var statusBody = {
-        header: { 
-            code: code, 
+        header: {
+            code: code,
             status: 200
         },
         body: body
@@ -23,10 +23,10 @@ const StatusBodyOk = (code, body) => {
 
 const StatusBodyOkToken = (code, body, token) => {
     var statusBody = {
-        header: { 
-            code: code, 
+        header: {
+            code: code,
             status: 200,
-            token : token
+            token: token
         },
         body: body
     };
@@ -35,21 +35,36 @@ const StatusBodyOkToken = (code, body, token) => {
 
 const StatusBodyError = (code, message) => {
     var statusBody = {
-        header: { 
-            code: code, 
+        header: {
+            code: code,
             status: "error",
             message: message
         },
-        body: { }
+        body: {}
     };
     return statusBody;
 }
 
 
+const StatusResponseGoogle = (code, message, usuario) => {
+    var statusBody = {
+        header: {
+            code: code,
+            status: "error",
+            message: message
+        },
+        body: {
+            usuario: usuario
+        }
+    };
+    return statusBody;
+}
+
 
 module.exports = {
-    buildArgsForRequest, 
+    buildArgsForRequest,
     StatusBodyOk,
     StatusBodyOkToken,
-    StatusBodyError
+    StatusBodyError,
+    StatusResponseGoogle
 }

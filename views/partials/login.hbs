@@ -30,5 +30,17 @@
                         </label>
                     </div>
                     <button class="btn btn-lg btn-info btn-block" type="submit">Entrar</button>
-                    <p class="mt-5 mb-3 text-muted"> © IbanezStudio | Todos los derechos reservados &copy; {{anio}}</p>
+                    <div class="container">
+                        <div class="row justify-content-md-center">
+                            <div class="col-md-auto mt-5 mb-3">
+                                <div class="g-signin2" data-width="auto" data-height="auto" data-longtitle="true" data-onsuccess="onSuccess"></div>
+                                <p>
+                                    <a href="#" onclick="signOut();">Cerrar sesión</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-5 mb-3 text-muted">
+                        © IbanezStudio | Todos los derechos reservados &copy;
+                        {{anio}}</p>
                 </form>

@@ -4,7 +4,7 @@ const jwt = require('../middlewares/autenticacion');
 const uHttp = require('../utils/utils-http');
 
 const validaUsuario = (usuario) => {
-
+    //=========== valido si el usuario existe en la base de datos ======================//
     return Usuario.findOne({ email: usuario.body.email })
         .then(userdb => {
             if (userdb != null) {

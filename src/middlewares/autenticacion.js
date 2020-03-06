@@ -5,7 +5,7 @@ const cfg = require('../config/configuration');
 // Verificar Token
 // =====================
 let verificaToken = (req, res, next) => {
-
+    //obtengo del header el token
     let token = req.get('token');
 
     jwt.verify(token, cfg.SECRETTOKEN, (err, decoded) => {
@@ -18,7 +18,7 @@ let verificaToken = (req, res, next) => {
                 }
             });
         }
-
+        req.token = token;
         req.usuario = decoded.usuario;
         next();
 
