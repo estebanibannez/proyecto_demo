@@ -117,7 +117,7 @@ app.post('/google', async(req, res) => {
 
                     }
                     //si no hay error entonces creo un token y lo regreso
-                    console.log("usuario no existe en la bd , se crea --> ", usuario);
+                    console.log("usuario no existe en la bd , se crea --> ", usuariodb);
                     const token = creaToken(usuariodb);
                     return res.json(uHttp.StatusBodyOkToken("200", usuariodb, token));
 
