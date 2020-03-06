@@ -23,7 +23,7 @@ function onSuccess(googleUser) {
     var id_token = googleUser
         .getAuthResponse()
         .id_token;
-    console.log("token google", id_token);
+    console.log("token", id_token);
     var profile = googleUser.getBasicProfile();
     console.log(profile.getGivenName());
     console.log(profile.getFamilyName());
@@ -36,7 +36,8 @@ function onSuccess(googleUser) {
     //======envío datos con token google para validación en el API
     var params = `idtoken=${id_token}&nombres=${profile.getGivenName()}&apellidos=${profile.getFamilyName()}`;
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'api/v1/google');
+    xhr.open('POST', 'https://pro-api-node.herokuapp.com/api/v1/google');
+    // xhr.open('POST', 'api/v1/google');
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function() {
         console.log('Signed in as: ' + xhr.responseText);
