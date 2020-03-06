@@ -23,7 +23,7 @@ function onSuccess(googleUser) {
     var id_token = googleUser
         .getAuthResponse()
         .id_token;
-    // console.log(id_token);
+    console.log("token google", id_token);
     var profile = googleUser.getBasicProfile();
     console.log(profile.getGivenName());
     console.log(profile.getFamilyName());
