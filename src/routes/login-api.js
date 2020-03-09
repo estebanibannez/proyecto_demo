@@ -70,7 +70,6 @@ app.post('/google', async(req, res) => {
         return res.status(403).json(uHttp.StatusBodyError("403", "Ocurrió un error en la autenticación google"));
     });
 
-    console.log(' dentro de /authgoogle', usuarioGoogle);
 
     //verificar que usuario no esté registrado con el correo en la bd
     const Usuario = require("../models/usuario-model");
@@ -79,52 +78,56 @@ app.post('/google', async(req, res) => {
     Usuario.findOne({
         email: usuarioGoogle.email
     }, (err, usuariodb) => {
-        console.log("respuesta findOne", usuariodb)
-        if (usuariodb != null) {
 
+        // if (usuariodb != null) {
+        console.log(`usuario --> ${usuariodb} encontrado.`)
 
-            if (err) {
-                return res.json(uHttp.StatusBodyError("500", `Ocurrió un error: ${err}`));
-            }
-            //si existe usuario registrado en bd ,y tiene google en falso, debe iniciar con su cuenta normal
-            if (usuariodb) {
-                if (usuariodb.google == false) {
-                    return res.json(uHttp.StatusBodyError("400", "Usuario ya está registrado, debe iniciar con su sesión normal"));
-                } else {
-                    // en caso contrario el usuario está creado , debo generarle un nuevo token 
-                    const token = creaToken(usuariodb);
-                    return res.json(uHttp.StatusBodyOkToken("200", usuariodb, token));
-                }
-            } else {
-                //si usuario no existe , se crea en la base de datos
-
-                let usuario = new Usuario();
-
-                usuario.nombre = nombres;
-                usuario.apellidos = apellidos;
-                usuario.email = usuarioGoogle.email;
-                usuario.img = usuarioGoogle.imagen;
-                usuario.google = true;
-                usuario.password = ':)';
-
-
-
-                usuario.save((error, usuariodb) => {
-
-                    if (error) {
-                        console.log("ocurrió un error de guardado de usuario nuevo --> ", error);
-                        return res.json(uHttp.StatusBodyError("500", `Ocurrió un error ${error}`));
-
-                    }
-                    //si no hay error entonces creo un token y lo regreso
-                    console.log("usuario no existe en la bd , se crea --> ", usuariodb);
-                    const token = creaToken(usuariodb);
-                    return res.json(uHttp.StatusBodyOkToken("200", usuariodb, token));
-
-                });
-            }
-
+        if (err) {
+            return res.json(uHttp.StatusBodyError("500", `Ocurrió un error: ${err}`));
         }
+        //si existe usuario registrado en bd ,y tiene google en falso, debe iniciar con su cuenta normal
+        if (usuariodb) {
+            if (usuariodb.google == false) {
+                console.log("Usuario ya está registrado, debe iniciar con su sesión normal.");
+                return res.json(uHttp.StatusBodyError("400", "Usuario ya está registrado, debe iniciar con su sesión normal."));
+            } else {
+                // en caso contrario el usuario está creado , debo generarle un nuevo token 
+                const token = creaToken(usuariodb);
+                console.log("Usuario ya está registrado desde la api.");
+                return res.json(uHttp.StatusBodyOkToken("200", usuariodb, token));
+            }
+        } else {
+            console.log("usuario no éxiste se creará en la BD");
+            //si usuario no existe , se crea en la base de datos
+
+            let usuario = new Usuario();
+
+            usuario.nombre = nombres;
+            usuario.apellidos = apellidos;
+            usuario.email = usuarioGoogle.email;
+            usuario.img = usuarioGoogle.imagen;
+            usuario.google = true;
+            usuario.password = ':)';
+
+            console.log(`usuario --> ${usuario} ha crearse en la BD`);
+
+
+            usuario.save((error, usuariodb) => {
+
+                if (error) {
+                    console.log("ocurrió un error de guardado de usuario nuevo --> ", error);
+                    return res.json(uHttp.StatusBodyError("500", `Ocurrió un error ${error}`));
+
+                }
+                //si no hay error entonces creo un token y lo regreso
+                console.log("usuario no existe en la bd , se crea --> ", usuariodb);
+                const token = creaToken(usuariodb);
+                return res.json(uHttp.StatusBodyOkToken("200", usuariodb, token));
+
+            });
+        }
+
+        // }
 
 
     })
