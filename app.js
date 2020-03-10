@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const hbs = require('hbs');
 const path = require('path');
 const dir = path.join(__dirname, 'public');
-
+const morgan = require('morgan');
 const port = cfg.puerto.webPort;
 
 // ===========configuración global de rutas ================//
@@ -24,8 +24,9 @@ app.use(function(req, res, next) {
     next();
 });
 // parse application/x-www-form-urlencoded parse application/json
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(morgan('dev'));
 
 // ==================pagina publica=====================// app.use('/',
 
