@@ -9,6 +9,7 @@ const client = new OAuth2Client(cfg.CLIENT_ID);
 const { creaToken } = require('../middlewares/autenticacion');
 
 app.post('/login', async(req, res) => {
+    console.log("----------->", req.body);
     // ==============valido si existe usuario en la base de datos y le genero un
     // token ==================//
     var usuario = await service.validaUsuario(req);

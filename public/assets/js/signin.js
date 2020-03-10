@@ -15,10 +15,14 @@ function signOut() {
         .signOut()
         .then(function() {
             console.log('User signed out.');
+
         });
+    auth2.disconnect();
 }
 
+
 function onSuccess(googleUser) {
+    debugger;
     console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
     var id_token = googleUser
         .getAuthResponse()
@@ -43,11 +47,11 @@ function onSuccess(googleUser) {
         console.log('Signed in as: ' + xhr.responseText);
     };
     xhr.send(params);
-}
+};
 
 function onFailure(error) {
     console.log(error);
-}
+};
 
 function renderButton() {
     gapi
@@ -62,4 +66,4 @@ function renderButton() {
             'onfailure': onFailure,
             'signOut': signOut
         });
-}
+};
