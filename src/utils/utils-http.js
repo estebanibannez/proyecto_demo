@@ -59,12 +59,23 @@ const StatusResponseGoogle = (code, message, usuario) => {
     };
     return statusBody;
 }
+const StatusResponseRedis = (code, guid, message, res) => {
+    var body = {
+        code: code,
+        guid: guid,
+        message: message,
+        data: res
+    };
 
+    return body;
+
+};
 
 module.exports = {
     buildArgsForRequest,
     StatusBodyOk,
     StatusBodyOkToken,
     StatusBodyError,
-    StatusResponseGoogle
+    StatusResponseGoogle,
+    StatusResponseRedis
 }

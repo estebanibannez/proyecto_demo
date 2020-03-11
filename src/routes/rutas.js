@@ -13,5 +13,6 @@ app.use(bodyParser.json())
 
 app.use(require('./usuarios-api'));
 app.use(require('./login-api'));
+app.use(require('./redis-api'));
 
 module.exports = app;

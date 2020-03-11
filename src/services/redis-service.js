@@ -1,0 +1,86 @@
+const redis = require('redis');
+const cfg = require('../config/configuration');
+const helper = require('../helpers/redis-helper');
+const uHttp = require('../utils/utils-http');
+const diaEnSegundos = 86400;
+const diasExpiracion = 60;
+var moment = require("moment");
+const uuidv1 = require('uuid').v1;
+//=============================================================//
+//=== servicio redis para el almacenamiento temporal de data===//
+//=============================================================//
+
+const creacliente = async() => {
+    var redisClient = redis.createClient({ port: cfg.SERVICIOREDIS.portRedis, host: cfg.SERVICIOREDIS.hostRedis });
+
+    redisClient.select(cfg.SERVICIOREDIS.bdredis, function() {
+        console.log("redis está apuntando a BD: " + cfg.SERVICIOREDIS.bdredis);
+    });
+
+    return redisClient;
+};
+
+const guardardataredis = async(req, res) => {
+
+    var clienteRedis = await creacliente();
+
+    // =============== descomentar solo si el redis tiene contraseña =======================//
+    // var authRedis = clienteRedis.auth(cfg.SERVICIOREDIS.passwordRedis, (error,
+    // reply) => {     if (error) {         res.json({ error: "400", message: "error
+    // en autenticación redis." })     }     return reply; });
+
+    //creo un identificador para el registro que se almacenará en redis
+    const tempGUID = uuidv1(); // ⇨ '2c5ea4c0-4067-11e9-8b2d-1b9d6bcdbbfd'
+    await clienteRedis.hmset(tempGUID, {
+        "nombreUsuario": req.body.nombre,
+        "apellidosUsuario": req.body.apellidos,
+        "fechaCreacion": moment().format("DD-MM-YYYY HH:mm:ss")
+    }, (err, reply) => {
+        if (err) {
+            clienteRedis.quit();
+            return res(uHttp.StatusResponseRedis("400", null, "Error al almacenar datos en redis", reply));
+
+        } else {
+            if (reply) {
+                //asigno fecha de expiración del registro guardado en redis
+                clienteRedis.expire(tempGUID, diasExpiracion * diaEnSegundos);
+                clienteRedis.quit();
+                return res(uHttp.StatusResponseRedis("200", tempGUID, "Datos almacenados en redis", reply));
+            }
+        }
+    });
+
+};
+
+const obtenerregistroredis = async(req, res) => {
+
+    var clienteRedis = await creacliente();
+    helper.checkGuidRedis(req.body, clienteRedis, (error, data) => {
+        if (error) {
+            console.log("error -->", error);
+            clienteRedis.quit();
+            return res(uHttp.StatusResponseRedis("400", null, "guid no éxiste en la BD redis.", null));
+        } else {
+
+            helper.getAllRedis(req.body, clienteRedis, (error, data) => {
+                if (error) {
+                    return res(uHttp.StatusBodyError("500", error));
+                } else {
+                    return res(uHttp.StatusResponseRedis("200", req.body.guid, "Registro encontrado.", data));
+                }
+
+            });
+
+        }
+
+        res
+    });
+
+
+};
+
+module.exports = {
+    guardardataredis,
+    obtenerregistroredis,
+    creacliente
+};
