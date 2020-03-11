@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node app.js",
         "test": "testing",
-        "dev": "nodemon -L -e hbs html app.js",
+        "dev": "nodemon -L -e hbs,js,html app.js",
         "stop-win": "Taskkill /IM node.exe /F"
     },
     "author": "Esteban Ibañez",
@@ -20,11 +20,15 @@
         "hbs": "^4.1.0",
         "heroku": "^7.38.2",
         "jsonwebtoken": "^8.5.1",
+        "moment": "^2.24.0",
         "mongoose": "^5.9.2",
         "mongoose-unique-validator": "^2.0.3",
+        "morgan": "^1.9.1",
+        "redis": "^3.0.2",
         "request": "^2.88.2",
         "request-promise": "^4.2.5",
-        "underscore": "^1.9.2"
+        "underscore": "^1.9.2",
+        "uuid": "^7.0.2"
     },
     "devDependencies": {
         "nodemon": "^2.0.2"

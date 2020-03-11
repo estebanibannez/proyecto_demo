@@ -31,6 +31,13 @@ module.exports = {
     // 24 horas
     // 30 días
     CADUCIDADTOKEN: process.env.CADUCIDAD_TOKEN = 60 * 60 * 24 * 30,
-    CLIENT_ID: process.env.CLIENT_ID || '932207751579-veeb40suglb58s0grcrrlq5evoajdihn.apps.googleusercontent.com'
+    CLIENT_ID: process.env.CLIENT_ID || '932207751579-veeb40suglb58s0grcrrlq5evoajdihn.apps.googleusercontent.com',
+
+    SERVICIOREDIS: {
+        hostRedis: process.env.REDIS_HOST || '127.0.0.1',
+        portRedis: process.env.REDIS_PORT || '6379',
+        passwordRedis: process.env.REDIS_PASSWORD || 'algunapassword',
+        bdredis: process.env.REDIS_BD || '01'
+    }
 
 }
