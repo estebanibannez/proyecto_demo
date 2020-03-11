@@ -11,23 +11,40 @@ const uuidv1 = require('uuid').v1;
 //=============================================================//
 
 const creacliente = async() => {
-    var redisClient = redis.createClient({ port: cfg.SERVICIOREDIS.portRedis, host: cfg.SERVICIOREDIS.hostRedis });
+    if (cfg.ENVIROMENT.env == 'DEV') {
 
-    redisClient.select(cfg.SERVICIOREDIS.bdredis, function() {
-        console.log("redis está apuntando a BD: " + cfg.SERVICIOREDIS.bdredis);
-    });
+        var redisClient = redis.createClient({ port: cfg.SERVICIOREDIS.portRedis, host: cfg.SERVICIOREDIS.hostRedis });
 
-    return redisClient;
+        redisClient.select(cfg.SERVICIOREDIS.bdredis, function() {
+            console.log("redis está apuntando a BD: " + cfg.SERVICIOREDIS.bdredis);
+        });
+
+        return redisClient;
+    } else {
+
+        var redisClient = redis.createClient({ port: cfg.SERVICIOREDIS.portRedis, host: cfg.SERVICIOREDIS.hostRedis });
+
+        redisClient.select(cfg.SERVICIOREDIS.bdredis, function() {
+            console.log("redis está apuntando a BD: " + cfg.SERVICIOREDIS.bdredis);
+        });
+        // =============== descomentar solo si el redis tiene contraseña =======================//
+        var authRedis = clienteRedis.auth(cfg.SERVICIOREDIS.passwordRedis, (error, reply) => {
+            if (error) {
+                res({ error: "400", message: "error en autenticación redis." })
+            }
+            return reply;
+        });
+        console.log("info redis password -->", authRedis);
+        return redisClient;
+    }
+
 };
 
 const guardardataredis = async(req, res) => {
 
     var clienteRedis = await creacliente();
 
-    // =============== descomentar solo si el redis tiene contraseña =======================//
-    // var authRedis = clienteRedis.auth(cfg.SERVICIOREDIS.passwordRedis, (error,
-    // reply) => {     if (error) {         res.json({ error: "400", message: "error
-    // en autenticación redis." })     }     return reply; });
+
 
     //creo un identificador para el registro que se almacenará en redis
     const tempGUID = uuidv1(); // ⇨ '2c5ea4c0-4067-11e9-8b2d-1b9d6bcdbbfd'
