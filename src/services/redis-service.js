@@ -13,7 +13,9 @@ const uuidv1 = require('uuid').v1;
 
 const creacliente = async() => {
     if (cfg.ENVIROMENT.env == 'DEV') {
-
+        console.log("======================================================");
+        console.log("=========== BD REDIS EN DESARROLLO ===================");
+        console.log("======================================================");
         const redis = new Redis({
             port: cfg.SERVICIOREDIS.portRedis, // Redis port
             host: cfg.SERVICIOREDIS.hostRedis, // Redis host
@@ -33,15 +35,16 @@ const creacliente = async() => {
     } else {
 
         // var redisClient = redis.createClient({ port: cfg.SERVICIOREDIS.portRedis, host: cfg.SERVICIOREDIS.hostRedis });
-
-
-        redis({
+        console.log("======================================================");
+        console.log("=========== BD REDIS EN PRODUCCIÓN ===================");
+        console.log("======================================================");
+        const redis = new Redis({
             port: cfg.SERVICIOREDIS.portRedis, // Redis port
             host: cfg.SERVICIOREDIS.hostRedis, // Redis host
             family: 4, // 4 (IPv4) or 6 (IPv6)
             password: cfg.SERVICIOREDIS.passwordRedis,
             db: 0
-        });
+        })
 
         redis.select(cfg.SERVICIOREDIS.bdredis, function() {
             console.log("redis está apuntando a BD: " + cfg.SERVICIOREDIS.bdredis);
