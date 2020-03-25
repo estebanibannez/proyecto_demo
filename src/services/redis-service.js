@@ -1,4 +1,5 @@
-const redis = require('redis');
+const Redis = require("ioredis");
+
 const cfg = require('../config/configuration');
 const helper = require('../helpers/redis-helper');
 const uHttp = require('../utils/utils-http');
@@ -13,29 +14,47 @@ const uuidv1 = require('uuid').v1;
 const creacliente = async() => {
     if (cfg.ENVIROMENT.env == 'DEV') {
 
-        var redisClient = redis.createClient({ port: cfg.SERVICIOREDIS.portRedis, host: cfg.SERVICIOREDIS.hostRedis });
+        const redis = new Redis({
+            port: cfg.SERVICIOREDIS.portRedis, // Redis port
+            host: cfg.SERVICIOREDIS.hostRedis, // Redis host
+            family: 4, // 4 (IPv4) or 6 (IPv6)
+            // password: cfg.SERVICIOREDIS.passwordRedis,
+            db: 0
+        })
 
-        redisClient.select(cfg.SERVICIOREDIS.bdredis, function() {
+        // var redisClient = redis.createClient({ port: cfg.SERVICIOREDIS.portRedis, host: cfg.SERVICIOREDIS.hostRedis });
+
+        redis.select(cfg.SERVICIOREDIS.bdredis, function() {
             console.log("redis está apuntando a BD: " + cfg.SERVICIOREDIS.bdredis);
         });
 
-        return redisClient;
+        return redis;
+
     } else {
 
-        var redisClient = redis.createClient({ port: cfg.SERVICIOREDIS.portRedis, host: cfg.SERVICIOREDIS.hostRedis });
+        // var redisClient = redis.createClient({ port: cfg.SERVICIOREDIS.portRedis, host: cfg.SERVICIOREDIS.hostRedis });
 
-        redisClient.select(cfg.SERVICIOREDIS.bdredis, function() {
+
+        redis({
+            port: cfg.SERVICIOREDIS.portRedis, // Redis port
+            host: cfg.SERVICIOREDIS.hostRedis, // Redis host
+            family: 4, // 4 (IPv4) or 6 (IPv6)
+            password: cfg.SERVICIOREDIS.passwordRedis,
+            db: 0
+        });
+
+        redis.select(cfg.SERVICIOREDIS.bdredis, function() {
             console.log("redis está apuntando a BD: " + cfg.SERVICIOREDIS.bdredis);
         });
         // =============== descomentar solo si el redis tiene contraseña =======================//
-        var authRedis = clienteRedis.auth(cfg.SERVICIOREDIS.passwordRedis, (error, reply) => {
-            if (error) {
-                res({ error: "400", message: "error en autenticación redis." })
-            }
-            return reply;
-        });
-        console.log("info redis password -->", authRedis);
-        return redisClient;
+        // var authRedis = clienteRedis.auth(cfg.SERVICIOREDIS.passwordRedis, (error, reply) => {
+        //     if (error) {
+        //         res({ error: "400", message: "error en autenticación redis." })
+        //     }
+        //     return reply;
+        // });
+        // console.log("info redis password -->", authRedis);
+        return redis;
     }
 
 };
